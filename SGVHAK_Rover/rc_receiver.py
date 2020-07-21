@@ -22,7 +22,7 @@ class RCReader(threading.Thread):
         self.args = args
         self.kwargs = kwargs
         self.chassis = args[0]
-        self.on = True
+        self.on = False
 
         return
 
@@ -41,10 +41,15 @@ class RCReader(threading.Thread):
         s.baudrate = connectparams['baudrate']
         s.port = connectparams['port']
         s.timeout = connectparams['timeout']
-        s.open()
+        try:
+            s.open()
+        except serial.SerialException as e:
+            logging.getLogger('werkzeug').error("RCReader.start failed: %s" % str(e))
+            self.chassis.use_rc_input = False
         
         if s.is_open:
             self.sp = s
+            self.on = True
 
             i = 0                              # Just read some lines
             line = self.sp.readline()

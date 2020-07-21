@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import logging
 import serial
 from struct import *
 
@@ -62,7 +63,11 @@ class lewansoul_wrapper:
     s.baudrate = connectparams['baudrate']
     s.port = connectparams['port']
     s.timeout = connectparams['timeout']
-    s.open()
+
+    try:
+        s.open()
+    except serial.SerialException as e:
+        logging.getLogger('werkzeug').error("lewansoul_wrapper.connect failed: %s" % str(e))
 
     if s.is_open:
       self.sp = s

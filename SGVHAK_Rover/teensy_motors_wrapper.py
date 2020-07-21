@@ -33,8 +33,12 @@ class teensy_motors_wrapper:
     s.baudrate = connectparams['baudrate']
     s.port = connectparams['port']
     s.timeout = connectparams['timeout']
-    s.open()
-    
+
+    try:
+        s.open()
+    except serial.SerialException as e:
+        logging.getLogger('werkzeug').error("teensy_motors_wrapper.connect failed: %s" % str(e))
+
     if s.is_open:
       self.sp = s
 

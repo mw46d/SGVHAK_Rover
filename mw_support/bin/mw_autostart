@@ -1,0 +1,12 @@
+#!/bin/bash -x
+
+sleep 10
+
+[ -x $HOME/mw/oled_bonnet.py ] && $HOME/mw/oled_bonnet.py &
+[ -x $HOME/mw/display_loop.py ] && $HOME/mw/display_loop.py &
+
+ethtool eth0 2>/dev/null | fgrep -q 'Link detected: yes'
+if [ $? -ne 0 ]
+then
+    $HOME/bin/mw_start >$HOME/mw.log 2>&1
+fi

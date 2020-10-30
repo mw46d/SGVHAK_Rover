@@ -51,11 +51,13 @@ def create_app():
 
     # Initiate
     global rcReceiverThread
+    app.logger.error("mw rcReceiverThread= " + str(rcReceiverThread));
 
     # When you kill Flask (SIGTERM), clear the trigger for the next thread
     atexit.register(interrupt)
 
     if rcReceiverThread != None:
+        rcReceiverThread.setApp(app)
         rcReceiverThread.start()
 
     return app
